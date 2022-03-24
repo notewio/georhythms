@@ -1,0 +1,2 @@
+# georhythms
+Rhythms as polygons
