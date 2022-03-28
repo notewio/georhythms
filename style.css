@@ -14,6 +14,6 @@ body {
 input {
   width: 6ch;
 }
-input#rhythm {
+input#hits, input#vector {
   width: 30ch;
 }

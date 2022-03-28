@@ -1,12 +1,16 @@
 const ticks_input = document.getElementById("ticks");
 const bpm_input = document.getElementById("bpm");
 const meter_input = document.getElementById("meter");
-const rhythm_input = document.getElementById("rhythm");
+const hits_input = document.getElementById("hits");
+const vector_input = document.getElementById("vector");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 function getHits() {
-  return rhythm_input.value.trim().split(/\s+/).map(x => parseInt(x));
+  return hits_input.value.trim().split(/\s+/).map(x => parseInt(x));
+}
+function getVectors() {
+  return vector_input.value.trim().split(/\s+/).map(x => parseInt(x));
 }
 
 function nmod(a, b) {
@@ -85,6 +89,12 @@ function update() {
   state.tpb = parseInt(ticks_input.value);
   state.ticks = state.tpb * parseInt(meter_input.value);  
   let angle = Math.PI*2 / state.ticks;
+
+  // Update vector
+  let v = hits.map((e, i) => hits[i+1] - e);
+  v.pop();
+  v.push(hits[0] + state.ticks - hits[hits.length - 1]);
+  vector_input.value = v.join(" ");
 
   for (let i = 0; i < hits.length; i++) {
     // Points
@@ -224,7 +234,17 @@ function draw(color = -1) {
 
 ticks_input.addEventListener("change", () => { update(); draw() });
 meter_input.addEventListener("change", () => { update(); draw() });
-rhythm_input.addEventListener("change", () => { update(); draw() });
+hits_input.addEventListener("change", () => { update(); draw() });
+vector_input.addEventListener("change", () => {
+  let s = 0;
+  hits_input.value = getVectors().map(e => {
+    let t = s;
+    s += e;
+    return t;
+  }).join(" ");
+  update();
+  draw();
+});
 
 update();
 draw();
